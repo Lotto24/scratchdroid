@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-apply plugin: 'com.android.library'
+package esailors.de.scratchdroid.example;
 
-android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-    defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
+public class FillForegroundFragment extends Fragment {
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.0'
+  @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+    View view = inflater.inflate(R.layout.fragment_main, container, false);
+    return view;
+  }
 }

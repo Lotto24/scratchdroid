@@ -15,16 +15,49 @@
 
 package esailors.de.scratchdroid.example;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.ArrayAdapter;
 
-
-public class ExampleActivity extends Activity {
+public class ExampleActivity extends ActionBarActivity implements ActionBar.OnNavigationListener {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+    getSupportActionBar().setListNavigationCallbacks(
+            ArrayAdapter.createFromResource(
+                    getSupportActionBar().getThemedContext(),
+                    R.array.action_list,
+                    android.R.layout.simple_spinner_dropdown_item),
+            this);
+
     setContentView(R.layout.activity_main);
+    if (savedInstanceState == null) {
+      getSupportFragmentManager().beginTransaction()
+              .replace(android.R.id.content, new FillForegroundFragment())
+              .commit();
+    }
   }
 
+  @Override
+  public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+    Fragment newFragment;
+    switch (itemPosition) {
+      default:
+      case 0:
+        newFragment = new FillForegroundFragment();
+        break;
+    }
+
+    getSupportFragmentManager().beginTransaction()
+            .replace(android.R.id.content, newFragment)
+            .commit();
+
+    return true;
+  }
 }

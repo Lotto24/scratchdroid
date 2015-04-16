@@ -234,7 +234,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
           }
         }
       }
-      Log.d(TAG, "Finishing draw loop");
+      Log.d(TAG, "Stopping draw loop");
     }
   }
 

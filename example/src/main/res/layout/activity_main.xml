@@ -1,25 +1,8 @@
-<LinearLayout
+<FrameLayout
+    android:id="@+id/container"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
-
-    <esailors.de.scratchdroid.ScratchView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:sv_background_drawable="@drawable/scratch_card_bg"
-        app:sv_foreground_drawable="@drawable/scratch_card_fg"
-        />
-
-    <esailors.de.scratchdroid.ScratchView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:sv_background_drawable="@drawable/scratch_card_bg"
-        app:sv_foreground_drawable="@drawable/scratch_card_fg"
-        />
-
-</LinearLayout>
+    tools:context="esailors.de.scratchdroid.example.ExampleActivity"
+    tools:ignore="MergeRootFrame"/>
