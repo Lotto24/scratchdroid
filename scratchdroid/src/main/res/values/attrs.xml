@@ -5,6 +5,7 @@
         <attr name="sv_background_drawable" format="reference"/>
         <attr name="sv_foreground_drawable" format="reference"/>
         <attr name="sv_scratch_radius" format="dimension"/>
+        <attr name="sv_foreground_color" format="color"/>
     </declare-styleable>
 
 </resources>

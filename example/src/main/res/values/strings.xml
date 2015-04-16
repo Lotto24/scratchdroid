@@ -2,5 +2,6 @@
     <string name="app_name">scratchdroid</string>
     <string-array name="action_list">
         <item>Fill Foreground</item>
+        <item>Drawable Foreground</item>
     </string-array>
 </resources>

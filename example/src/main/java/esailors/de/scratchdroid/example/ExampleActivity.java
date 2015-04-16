@@ -23,6 +23,8 @@ import android.widget.ArrayAdapter;
 
 public class ExampleActivity extends ActionBarActivity implements ActionBar.OnNavigationListener {
 
+  private int selectedFragment = 0;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -46,11 +48,20 @@ public class ExampleActivity extends ActionBarActivity implements ActionBar.OnNa
 
   @Override
   public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+
+    if (itemPosition == selectedFragment) {
+      return true;
+    }
+
+    selectedFragment = itemPosition;
     Fragment newFragment;
     switch (itemPosition) {
       default:
       case 0:
         newFragment = new FillForegroundFragment();
+        break;
+      case 1:
+        newFragment = new DrawableForegroundFragment();
         break;
     }
 

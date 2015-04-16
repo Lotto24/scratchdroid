@@ -22,12 +22,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class FillForegroundFragment extends Fragment {
-
+public class DrawableForegroundFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    View view = inflater.inflate(R.layout.fragment_fill_foreground, container, false);
+    View view = inflater.inflate(R.layout.fragment_drawable_foreground, container, false);
     return view;
   }
 }

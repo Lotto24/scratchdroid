@@ -20,6 +20,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -44,6 +45,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   private DrawLoopThread drawLoopThread;
   private float scratchRadius;
+  private int foregroundColor;
 
   private Drawable backgroundDrawable;
   private Bitmap backgroundBitmap;
@@ -79,6 +81,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
       foregroundDrawable = a.getDrawable(R.styleable.ScratchView_sv_foreground_drawable);
       scratchRadius = a.getDimension(R.styleable.ScratchView_sv_scratch_radius,
               TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SCRATCH_RADIUS_DIP, getResources().getDisplayMetrics()));
+      foregroundColor = a.getColor(R.styleable.ScratchView_sv_foreground_color, Color.BLACK);
     } finally {
       if (a != null) {
         a.recycle();
@@ -112,7 +115,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
       }
       c.drawBitmap(foregroundBitmap, foregroundTransformationMatrix, backgroundSolidPaint);
     } else {
-      c.drawARGB(255, 155, 155, 10);
+      c.drawColor(foregroundColor);
     }
   }
 
@@ -209,6 +212,12 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     drawLoopThread = null;
   }
 
+  @Override
+  protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+    drawScratchView(canvas);
+  }
+
   private class DrawLoopThread extends Thread {
 
     boolean paused = false;
@@ -216,6 +225,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void run() {
 
+      Log.d(TAG, "Starting draw loop");
       while (!paused) {
         if (!getHolder().getSurface().isValid()) {
           continue;
