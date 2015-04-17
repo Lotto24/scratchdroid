@@ -24,4 +24,14 @@
         android:layout_marginTop="16dp"
         />
 
+    <de.esailors.android.widget.scratch.ScratchView
+        android:id="@+id/scratch_completed_custom_scratch_region_scratch_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:sv_scratch_background_drawable="@drawable/scratch_card_bg"
+        app:sv_scratch_foreground_drawable="@drawable/repeatable_texture"
+        app:sv_scratch_foreground_repeat="true"
+        app:sv_scratch_radius="30dp"
+        />
 </LinearLayout>

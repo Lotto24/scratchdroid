@@ -24,6 +24,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -45,12 +47,14 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   private final Paint foregroundBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Paint solidPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Path scratchedPath = new Path();
-  private final Region surfaceFrameRegion = new Region();
+  private final Region scratchRegion = new Region();
 
   private OnScratchCompletedListener onScratchCompletedListener;
   private DrawLoopThread drawLoopThread;
   private float scratchRadius;
+  private Path customScratchPath;
   private boolean scratchCompleted;
+  private boolean debug;
 
   private Bitmap backgroundBitmap;
   private BitmapShader backgroundBitmapShader;
@@ -66,6 +70,8 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     backgroundBitmapPaint.setStyle(Paint.Style.FILL);
     solidPaint.setStyle(Paint.Style.FILL);
   }
+
+  private ScratchPathCalculator scratchPathCalculator;
 
   public ScratchView(Context context) {
 
@@ -105,6 +111,10 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
     drawNotScratchedAreas(c);
     drawScratchedAreas(c);
+
+    if (debug && customScratchPath != null) {
+      drawCustomScratchPath(c);
+    }
   }
 
   private void drawNotScratchedAreas(Canvas c) {
@@ -136,6 +146,15 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     }
   }
 
+  private void drawCustomScratchPath(Canvas c) {
+
+    Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+    p.setColor(Color.RED);
+    p.setStyle(Paint.Style.STROKE);
+    p.setStrokeWidth(1); // 1px
+    c.drawPath(customScratchPath, p);
+  }
+
   private Matrix createTransformationMatrix(Canvas c, Bitmap bitmap) {
 
     float scaleWidth = (float) c.getWidth() / bitmap.getWidth();
@@ -149,6 +168,13 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   public boolean onTouchEvent(MotionEvent event) {
 
     switch (event.getAction()) {
+      case MotionEvent.ACTION_DOWN:
+        if (debug) {
+          // useful to create custom scratch paths
+          Log.d(TAG, String.format("p.addCircle(%f, %f, %f, Path.Direction.CW);", event.getX(), event.getY(), scratchRadius));
+        } else {
+          break;
+        }
       case MotionEvent.ACTION_MOVE:
         updateScratchedPath(event.getX(), event.getY());
         break;
@@ -171,9 +197,9 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     Region scratchedRegion = new Region();
-    scratchedRegion.setPath(scratchedPath, surfaceFrameRegion);
-    surfaceFrameRegion.op(scratchedRegion, Region.Op.DIFFERENCE);
-    if (surfaceFrameRegion.isEmpty()) {
+    scratchedRegion.setPath(scratchedPath, scratchRegion);
+    scratchRegion.op(scratchedRegion, Region.Op.DIFFERENCE);
+    if (scratchRegion.isEmpty()) {
       scratchCompleted = true;
       onScratchCompletedListener.onScratchCompleted(this);
     }
@@ -215,7 +241,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   @Override
   public void surfaceCreated(SurfaceHolder holder) {
 
-    surfaceFrameRegion.set(getHolder().getSurfaceFrame());
+    updateScratchRegion();
     drawLoopThread = new DrawLoopThread();
     drawLoopThread.start();
   }
@@ -223,7 +249,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   @Override
   public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
-    surfaceFrameRegion.set(holder.getSurfaceFrame());
+    updateScratchRegion();
   }
 
   @Override
@@ -239,6 +265,23 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
       break;
     }
     drawLoopThread = null;
+  }
+
+  private void updateScratchRegion() {
+
+    if (scratchPathCalculator != null) {
+      customScratchPath = scratchPathCalculator.calculateScratchPath(getHolder().getSurfaceFrame());
+      Region surfaceFrameRegion = new Region();
+      surfaceFrameRegion.set(getHolder().getSurfaceFrame());
+      scratchRegion.setPath(customScratchPath, surfaceFrameRegion);
+    } else {
+      scratchRegion.set(getHolder().getSurfaceFrame());
+    }
+
+    if (debug) {
+      Log.d(TAG, "surface frame" + getHolder().getSurfaceFrame());
+    }
+
   }
 
   @Override
@@ -314,6 +357,35 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     this.foregroundRepeat = foregroundRepeat;
     updateForegroundBitmapShader();
     return this;
+  }
+
+  public ScratchView setCustomScratchPath(Path path) {
+
+    customScratchPath = path;
+    return this;
+  }
+
+  public ScratchView setDebug(boolean debug) {
+
+    this.debug = debug;
+    return this;
+  }
+
+  public ScratchView setScratchPathCalculator(ScratchPathCalculator scratchPathCalculator) {
+
+    this.scratchPathCalculator = scratchPathCalculator;
+    return this;
+  }
+
+  public void scratchAll() {
+
+    scratchCompleted = true;
+    scratchedPath.addRect(new RectF(getHolder().getSurfaceFrame()), Path.Direction.CW);
+  }
+
+  public interface ScratchPathCalculator {
+
+    Path calculateScratchPath(Rect surfaceFrame);
   }
 
   /**
