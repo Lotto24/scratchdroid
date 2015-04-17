@@ -28,6 +28,7 @@ ScratchView sv = new ScratchView(context);
 sv.setScratchBackground(backgroundDrawable);
 sv.setScratchForegroundRepeat(true);
 sv.setScratchRadius((float) 30);
+```
 
 License
 -------
