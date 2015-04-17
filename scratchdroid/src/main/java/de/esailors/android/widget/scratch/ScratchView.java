@@ -39,39 +39,40 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   private static final String TAG = "ScratchView";
   private static final int DEFAULT_SCRATCH_RADIUS_DIP = 30;
+  private static final int DEFAULT_FOREGROUND_COLOR = Color.BLACK;
 
   private final Paint backgroundBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Paint foregroundBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Paint solidPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Path scratchedPath = new Path();
+  private final Region surfaceFrameRegion = new Region();
 
   private OnScratchCompletedListener onScratchCompletedListener;
   private DrawLoopThread drawLoopThread;
   private float scratchRadius;
-  private int foregroundColor;
   private boolean scratchCompleted;
 
-  private Drawable backgroundDrawable;
   private Bitmap backgroundBitmap;
   private BitmapShader backgroundBitmapShader;
   private Matrix backgroundTransformationMatrix;
 
-  private Drawable foregroundDrawable;
   private Bitmap foregroundBitmap;
   private BitmapShader foregroundBitmapShader;
   private Matrix foregroundTransformationMatrix;
   private boolean foregroundRepeat;
+  private int foregroundColor = DEFAULT_FOREGROUND_COLOR;
 
   {
     backgroundBitmapPaint.setStyle(Paint.Style.FILL);
     solidPaint.setStyle(Paint.Style.FILL);
   }
 
-  private Region surfaceFrameRegion;
-
   public ScratchView(Context context) {
 
     super(context);
+    scratchRadius = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SCRATCH_RADIUS_DIP, getResources().getDisplayMetrics());
+    getHolder().addCallback(this);
   }
 
   public ScratchView(Context context, AttributeSet attrs) {
@@ -85,29 +86,15 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
     TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScratchView, defStyle, 0);
     try {
-      backgroundDrawable = a.getDrawable(R.styleable.ScratchView_sv_background_drawable);
-      foregroundDrawable = a.getDrawable(R.styleable.ScratchView_sv_foreground_drawable);
-      scratchRadius = a.getDimension(R.styleable.ScratchView_sv_scratch_radius,
-              TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SCRATCH_RADIUS_DIP, getResources().getDisplayMetrics()));
-      foregroundColor = a.getColor(R.styleable.ScratchView_sv_foreground_color, Color.BLACK);
       foregroundRepeat = a.getBoolean(R.styleable.ScratchView_sv_foreground_repeat, false);
+      scratchRadius = a.getDimension(R.styleable.ScratchView_sv_scratch_radius, TypedValue.applyDimension(
+              TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SCRATCH_RADIUS_DIP, getResources().getDisplayMetrics()));
+      foregroundColor = a.getColor(R.styleable.ScratchView_sv_foreground_color, DEFAULT_FOREGROUND_COLOR);
+      setScratchBackgroundDrawable(a.getDrawable(R.styleable.ScratchView_sv_background_drawable));
+      setScratchForegroundDrawable(a.getDrawable(R.styleable.ScratchView_sv_foreground_drawable));
     } finally {
       if (a != null) {
         a.recycle();
-      }
-    }
-
-    if (backgroundDrawable != null) {
-      backgroundBitmap = ((BitmapDrawable) backgroundDrawable).getBitmap();
-      backgroundBitmapShader = new BitmapShader(backgroundBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-      backgroundBitmapPaint.setShader(backgroundBitmapShader);
-    }
-
-    if (foregroundDrawable != null) {
-      foregroundBitmap = ((BitmapDrawable) foregroundDrawable).getBitmap();
-      if (foregroundRepeat) {
-        foregroundBitmapShader = new BitmapShader(foregroundBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-        foregroundBitmapPaint.setShader(foregroundBitmapShader);
       }
     }
 
@@ -116,13 +103,30 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   private void drawScratchView(Canvas c) {
 
-    drawNotScratchedAreas(c);
-    drawScratchedAreas(c);
+    if (scratchCompleted) {
+      drawCompleteBackground(c);
+    } else {
+      drawNotScratchedAreas(c);
+      drawScratchedAreas(c);
+    }
+  }
+
+  private void drawCompleteBackground(Canvas c) {
+
+    if (backgroundBitmap != null) {
+      if (backgroundTransformationMatrix == null) {
+        backgroundTransformationMatrix = createTransformationMatrix(c, backgroundBitmap);
+        backgroundBitmapShader.setLocalMatrix(backgroundTransformationMatrix);
+      }
+      c.drawRect(surfaceFrameRegion.getBounds(), backgroundBitmapPaint);
+    } else {
+      c.drawRect(surfaceFrameRegion.getBounds(), solidPaint);
+    }
   }
 
   private void drawNotScratchedAreas(Canvas c) {
 
-    if (foregroundDrawable != null) {
+    if (foregroundBitmap != null) {
       if (foregroundRepeat) {
         c.drawRect(c.getClipBounds(), foregroundBitmapPaint);
       } else {
@@ -228,9 +232,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   @Override
   public void surfaceCreated(SurfaceHolder holder) {
 
-    surfaceFrameRegion = new Region();
     surfaceFrameRegion.set(getHolder().getSurfaceFrame());
-
     drawLoopThread = new DrawLoopThread();
     drawLoopThread.start();
   }
@@ -238,6 +240,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   @Override
   public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
+    surfaceFrameRegion.set(holder.getSurfaceFrame());
   }
 
   @Override
@@ -267,11 +270,73 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     this.onScratchCompletedListener = onScratchCompletedListener;
   }
 
+  public void setScratchBackgroundDrawable(Drawable drawable) {
+
+    if (drawable != null) {
+      backgroundBitmap = ((BitmapDrawable) drawable).getBitmap();
+      backgroundBitmapShader = new BitmapShader(backgroundBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+      backgroundBitmapPaint.setShader(backgroundBitmapShader);
+    } else {
+      backgroundBitmap = null;
+      backgroundBitmapShader = null;
+    }
+  }
+
+  public void setScratchForegroundDrawable(Drawable drawable) {
+
+    if (drawable != null) {
+      foregroundBitmap = ((BitmapDrawable) drawable).getBitmap();
+      updateForegroundBitmapShader();
+    } else {
+      foregroundBitmap = null;
+      foregroundBitmapShader = null;
+    }
+  }
+
+  private void updateForegroundBitmapShader() {
+
+    if (foregroundRepeat) {
+      foregroundBitmapShader = new BitmapShader(foregroundBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+      foregroundBitmapPaint.setShader(foregroundBitmapShader);
+    }
+  }
+
+  public void setScratchRadius(float radius) {
+
+    scratchRadius = radius;
+  }
+
+  public void setScratchRadiusDimen(int resId) {
+
+    setScratchRadius(getResources().getDimension(resId));
+  }
+
+  public void setForegroundColor(int color) {
+
+    foregroundColor = color;
+  }
+
+  public void setForegroundRepeat(boolean foregroundRepeat) {
+
+    if (this.foregroundRepeat == foregroundRepeat) {
+      return;
+    }
+
+    this.foregroundRepeat = foregroundRepeat;
+    updateForegroundBitmapShader();
+  }
+
+  /**
+   * Callback to be invoked when the scratch view has fully been scratched.
+   */
   public interface OnScratchCompletedListener {
 
     void onScratchCompleted(ScratchView scratchView);
   }
 
+  /**
+   * Infinite loop that draws the actual state in the canvas, if valid.
+   */
   private class DrawLoopThread extends Thread {
 
     boolean paused = false;
