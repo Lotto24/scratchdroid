@@ -8,17 +8,17 @@ Usage
 Define in xml:
 
 ```xml
-    <de.esailors.android.widget.scratch.ScratchView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/scratch_completed_scratch_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:sv_scratch_background_drawable="@drawable/scratch_card_bg"
-        app:sv_scratch_foreground_drawable="@drawable/repeatable_texture"
-        app:sv_scratch_foreground_repeat="true"
-        app:sv_scratch_radius="30dp"
-        />
+<de.esailors.android.widget.scratch.ScratchView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scratch_completed_scratch_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    app:sv_scratch_background_drawable="@drawable/scratch_card_bg"
+    app:sv_scratch_foreground_drawable="@drawable/repeatable_texture"
+    app:sv_scratch_foreground_repeat="true"
+    app:sv_scratch_radius="30dp"
+    />
 ```
 
 Or in code:
