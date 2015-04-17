@@ -20,7 +20,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "esailors.de.scratchdroid.example"
+        applicationId "de.esailors.android.widget.scratch.example"
         minSdkVersion 8
         targetSdkVersion 22
         versionCode 1

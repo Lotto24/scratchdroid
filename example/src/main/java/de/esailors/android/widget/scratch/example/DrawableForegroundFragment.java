@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package esailors.de.scratchdroid;
+package de.esailors.android.widget.scratch.example;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-  public ApplicationTest() {
-    super(Application.class);
+public class DrawableForegroundFragment extends Fragment {
+  @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+    View view = inflater.inflate(R.layout.fragment_drawable_foreground, container, false);
+    return view;
   }
 }

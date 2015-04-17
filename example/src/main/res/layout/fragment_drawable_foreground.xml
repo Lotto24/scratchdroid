@@ -13,7 +13,7 @@
         android:text="NO_REPEAT (STRETCH)"
         />
 
-    <esailors.de.scratchdroid.ScratchView
+    <de.esailors.android.widget.scratch.ScratchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -28,7 +28,7 @@
         android:text="REPEAT"
         />
 
-    <esailors.de.scratchdroid.ScratchView
+    <de.esailors.android.widget.scratch.ScratchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

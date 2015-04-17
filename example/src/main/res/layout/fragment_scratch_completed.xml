@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <esailors.de.scratchdroid.ScratchView
+    <de.esailors.android.widget.scratch.ScratchView
         android:id="@+id/scratch_completed_scratch_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package esailors.de.scratchdroid;
+package de.esailors.android.widget.scratch;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -254,7 +254,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   @Override
   protected void onDraw(Canvas canvas) {
-    
+
     super.onDraw(canvas);
     drawScratchView(canvas);
   }

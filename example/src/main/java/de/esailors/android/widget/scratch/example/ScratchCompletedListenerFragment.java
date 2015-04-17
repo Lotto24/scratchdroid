@@ -13,21 +13,37 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-package esailors.de.scratchdroid.example;
+package de.esailors.android.widget.scratch.example;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-public class FillForegroundFragment extends Fragment {
+import de.esailors.android.widget.scratch.ScratchView;
+
+public class ScratchCompletedListenerFragment extends Fragment implements ScratchView.OnScratchCompletedListener {
+
+  private ScratchView scratchView;
+  private TextView label;
 
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    View view = inflater.inflate(R.layout.fragment_fill_foreground, container, false);
-    return view;
+    View content = inflater.inflate(R.layout.fragment_scratch_completed, container, false);
+    scratchView = (ScratchView) content.findViewById(R.id.scratch_completed_scratch_view);
+    label = (TextView) content.findViewById(R.id.scratch_completed_label);
+    scratchView.setOnScratchCompletedListener(this);
+    return content;
+  }
+
+  @Override
+  public void onScratchCompleted(ScratchView scratchView) {
+    Log.d("ScratchCompleted", "SCRATCH COMPLETED!");
+    label.setText("SCRATCH COMPLETED!");
   }
 }
