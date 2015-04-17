@@ -103,25 +103,8 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   private void drawScratchView(Canvas c) {
 
-    if (scratchCompleted) {
-      drawCompleteBackground(c);
-    } else {
-      drawNotScratchedAreas(c);
-      drawScratchedAreas(c);
-    }
-  }
-
-  private void drawCompleteBackground(Canvas c) {
-
-    if (backgroundBitmap != null) {
-      if (backgroundTransformationMatrix == null) {
-        backgroundTransformationMatrix = createTransformationMatrix(c, backgroundBitmap);
-        backgroundBitmapShader.setLocalMatrix(backgroundTransformationMatrix);
-      }
-      c.drawRect(surfaceFrameRegion.getBounds(), backgroundBitmapPaint);
-    } else {
-      c.drawRect(surfaceFrameRegion.getBounds(), solidPaint);
-    }
+    drawNotScratchedAreas(c);
+    drawScratchedAreas(c);
   }
 
   private void drawNotScratchedAreas(Canvas c) {
