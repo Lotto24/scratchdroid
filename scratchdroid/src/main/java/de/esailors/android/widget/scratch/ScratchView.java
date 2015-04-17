@@ -45,9 +45,11 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   private final Paint solidPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Path scratchedPath = new Path();
 
+  private OnScratchCompletedListener onScratchCompletedListener;
   private DrawLoopThread drawLoopThread;
   private float scratchRadius;
   private int foregroundColor;
+  private boolean scratchCompleted;
 
   private Drawable backgroundDrawable;
   private Bitmap backgroundBitmap;
@@ -59,8 +61,6 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   private BitmapShader foregroundBitmapShader;
   private Matrix foregroundTransformationMatrix;
   private boolean foregroundRepeat;
-
-  private OnScratchCompletedListener onScratchCompletedListener;
 
   {
     backgroundBitmapPaint.setStyle(Paint.Style.FILL);
@@ -171,8 +171,10 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   private void updateScratchedPath(float x, float y) {
 
-    scratchedPath.addCircle(x, y, scratchRadius, Path.Direction.CW);
-    calculateScratchedRegionAndNotifyListener();
+    if (!scratchCompleted) {
+      scratchedPath.addCircle(x, y, scratchRadius, Path.Direction.CW);
+      calculateScratchedRegionAndNotifyListener();
+    }
   }
 
   private void calculateScratchedRegionAndNotifyListener() {
@@ -185,6 +187,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     scratchedRegion.setPath(scratchedPath, surfaceFrameRegion);
     surfaceFrameRegion.op(scratchedRegion, Region.Op.DIFFERENCE);
     if (surfaceFrameRegion.isEmpty()) {
+      scratchCompleted = true;
       onScratchCompletedListener.onScratchCompleted(this);
     }
   }
@@ -260,6 +263,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   }
 
   public void setOnScratchCompletedListener(OnScratchCompletedListener onScratchCompletedListener) {
+
     this.onScratchCompletedListener = onScratchCompletedListener;
   }
 
