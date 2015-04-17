@@ -24,11 +24,11 @@ Define in xml:
 Or in code:
 
 ```java
-ScratchView sv = new ScratchView(context);
-sv.setScratchBackground(backgroundDrawable);
-sv.setScratchForegroundRepeat(true);
-sv.setScratchRadius((float) 30);
-sv.setOnScratchCompletedListener(new ScratchView.OnScratchCompletedListener() {
+ScratchView sv = new ScratchView(context)
+.setScratchBackground(backgroundDrawable)
+.setScratchForegroundRepeat(true)
+.setScratchRadius((float) 30)
+.setOnScratchCompletedListener(new ScratchView.OnScratchCompletedListener() {
     @Override
     public void onScratchCompleted(ScratchView view) {
     // do something
