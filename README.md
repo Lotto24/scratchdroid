@@ -30,7 +30,7 @@ sv.setScratchForegroundRepeat(true);
 sv.setScratchRadius((float) 30);
 sv.setOnScratchCompletedListener(new ScratchView.OnScratchCompletedListener() {
     @Override
-    public void onScratchCompleted(ScratchView scratchView) {
+    public void onScratchCompleted(ScratchView view) {
     // do something
     }
 });
