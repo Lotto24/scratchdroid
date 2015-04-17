@@ -21,6 +21,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ArrayAdapter;
 
+import de.esailors.android.widget.scratch.ScratchView;
+
 public class ExampleActivity extends ActionBarActivity implements ActionBar.OnNavigationListener {
 
   private int selectedFragment = 0;
@@ -44,6 +46,14 @@ public class ExampleActivity extends ActionBarActivity implements ActionBar.OnNa
               .replace(android.R.id.content, new FillForegroundFragment())
               .commit();
     }
+
+    new ScratchView(getApplicationContext()).setOnScratchCompletedListener(new ScratchView.OnScratchCompletedListener() {
+      @Override
+      public void onScratchCompleted(ScratchView scratchView) {
+        // do something
+      }
+    });
+
   }
 
   @Override

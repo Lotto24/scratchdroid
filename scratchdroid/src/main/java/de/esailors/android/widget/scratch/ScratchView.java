@@ -86,12 +86,12 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
     TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ScratchView, defStyle, 0);
     try {
-      foregroundRepeat = a.getBoolean(R.styleable.ScratchView_sv_foreground_repeat, false);
+      foregroundRepeat = a.getBoolean(R.styleable.ScratchView_sv_scratch_foreground_repeat, false);
       scratchRadius = a.getDimension(R.styleable.ScratchView_sv_scratch_radius, TypedValue.applyDimension(
               TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SCRATCH_RADIUS_DIP, getResources().getDisplayMetrics()));
-      foregroundColor = a.getColor(R.styleable.ScratchView_sv_foreground_color, DEFAULT_FOREGROUND_COLOR);
-      setScratchBackgroundDrawable(a.getDrawable(R.styleable.ScratchView_sv_background_drawable));
-      setScratchForegroundDrawable(a.getDrawable(R.styleable.ScratchView_sv_foreground_drawable));
+      foregroundColor = a.getColor(R.styleable.ScratchView_sv_scratch_foreground_color, DEFAULT_FOREGROUND_COLOR);
+      setScratchBackground(a.getDrawable(R.styleable.ScratchView_sv_scratch_background_drawable));
+      setScratchForeground(a.getDrawable(R.styleable.ScratchView_sv_scratch_foreground_drawable));
     } finally {
       if (a != null) {
         a.recycle();
@@ -248,12 +248,13 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     drawScratchView(canvas);
   }
 
-  public void setOnScratchCompletedListener(OnScratchCompletedListener onScratchCompletedListener) {
+  public ScratchView setOnScratchCompletedListener(OnScratchCompletedListener onScratchCompletedListener) {
 
     this.onScratchCompletedListener = onScratchCompletedListener;
+    return this;
   }
 
-  public void setScratchBackgroundDrawable(Drawable drawable) {
+  public ScratchView setScratchBackground(Drawable drawable) {
 
     if (drawable != null) {
       backgroundBitmap = ((BitmapDrawable) drawable).getBitmap();
@@ -263,9 +264,10 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
       backgroundBitmap = null;
       backgroundBitmapShader = null;
     }
+    return this;
   }
 
-  public void setScratchForegroundDrawable(Drawable drawable) {
+  public ScratchView setScratchForeground(Drawable drawable) {
 
     if (drawable != null) {
       foregroundBitmap = ((BitmapDrawable) drawable).getBitmap();
@@ -274,6 +276,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
       foregroundBitmap = null;
       foregroundBitmapShader = null;
     }
+    return this;
   }
 
   private void updateForegroundBitmapShader() {
@@ -284,29 +287,33 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     }
   }
 
-  public void setScratchRadius(float radius) {
+  public ScratchView setScratchRadius(float radius) {
 
     scratchRadius = radius;
+    return this;
   }
 
-  public void setScratchRadiusDimen(int resId) {
+  public ScratchView setScratchRadiusDimen(int resId) {
 
     setScratchRadius(getResources().getDimension(resId));
+    return this;
   }
 
-  public void setForegroundColor(int color) {
+  public ScratchView setScratchForegroundColor(int color) {
 
     foregroundColor = color;
+    return this;
   }
 
-  public void setForegroundRepeat(boolean foregroundRepeat) {
+  public ScratchView setScratchForegroundRepeat(boolean foregroundRepeat) {
 
     if (this.foregroundRepeat == foregroundRepeat) {
-      return;
+      return this;
     }
 
     this.foregroundRepeat = foregroundRepeat;
     updateForegroundBitmapShader();
+    return this;
   }
 
   /**
