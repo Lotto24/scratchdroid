@@ -6,20 +6,35 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="NO_REPEAT (STRETCH)"
+        />
+
     <esailors.de.scratchdroid.ScratchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:sv_background_drawable="@drawable/scratch_card_bg"
-        app:sv_foreground_drawable="@drawable/scratch_card_fg"
+        app:sv_foreground_drawable="@drawable/repeatable_texture"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="REPEAT"
         />
 
     <esailors.de.scratchdroid.ScratchView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        app:sv_scratch_radius="30dp"
         app:sv_background_drawable="@drawable/scratch_card_bg"
-        app:sv_foreground_drawable="@drawable/scratch_card_fg"
+        app:sv_foreground_drawable="@drawable/repeatable_texture"
+        app:sv_foreground_repeat="true"
         />
-
 </LinearLayout>

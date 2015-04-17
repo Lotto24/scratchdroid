@@ -6,6 +6,13 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="FOREGROUND COLOR"
+        />
+
     <esailors.de.scratchdroid.ScratchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,11 +20,19 @@
         app:sv_background_drawable="@drawable/scratch_card_bg"
         app:sv_foreground_color="#7cbade"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="SCRATCH RADIUS"
+        />
+
     <esailors.de.scratchdroid.ScratchView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:sv_background_drawable="@drawable/scratch_card_bg"
-        app:sv_foreground_color="#9dde7c"/>
+        app:sv_foreground_color="#90de7c"
+        app:sv_scratch_radius="15dp"/>
 
 </LinearLayout>

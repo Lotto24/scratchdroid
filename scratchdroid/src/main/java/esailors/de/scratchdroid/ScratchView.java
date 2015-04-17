@@ -40,6 +40,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   private static final int DEFAULT_SCRATCH_RADIUS_DIP = 30;
 
   private final Paint backgroundBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+  private final Paint foregroundBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Paint backgroundSolidPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private final Path scratchedPath = new Path();
 
@@ -54,7 +55,9 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   private Drawable foregroundDrawable;
   private Bitmap foregroundBitmap;
+  private BitmapShader foregroundBitmapShader;
   private Matrix foregroundTransformationMatrix;
+  private boolean foregroundRepeat;
 
   {
     backgroundBitmapPaint.setStyle(Paint.Style.FILL);
@@ -82,6 +85,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
       scratchRadius = a.getDimension(R.styleable.ScratchView_sv_scratch_radius,
               TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SCRATCH_RADIUS_DIP, getResources().getDisplayMetrics()));
       foregroundColor = a.getColor(R.styleable.ScratchView_sv_foreground_color, Color.BLACK);
+      foregroundRepeat = a.getBoolean(R.styleable.ScratchView_sv_foreground_repeat, false);
     } finally {
       if (a != null) {
         a.recycle();
@@ -96,6 +100,10 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
     if (foregroundDrawable != null) {
       foregroundBitmap = ((BitmapDrawable) foregroundDrawable).getBitmap();
+      if (foregroundRepeat) {
+        foregroundBitmapShader = new BitmapShader(foregroundBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+        foregroundBitmapPaint.setShader(foregroundBitmapShader);
+      }
     }
 
     getHolder().addCallback(this);
@@ -110,10 +118,14 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   private void drawNotScratchedAreas(Canvas c) {
 
     if (foregroundDrawable != null) {
-      if (foregroundTransformationMatrix == null) {
-        foregroundTransformationMatrix = createTransformationMatrix(c, foregroundBitmap);
+      if (foregroundRepeat) {
+        c.drawRect(c.getClipBounds(), foregroundBitmapPaint);
+      } else {
+        if (foregroundTransformationMatrix == null) {
+          foregroundTransformationMatrix = createTransformationMatrix(c, foregroundBitmap);
+        }
+        c.drawBitmap(foregroundBitmap, foregroundTransformationMatrix, backgroundSolidPaint);
       }
-      c.drawBitmap(foregroundBitmap, foregroundTransformationMatrix, backgroundSolidPaint);
     } else {
       c.drawColor(foregroundColor);
     }
