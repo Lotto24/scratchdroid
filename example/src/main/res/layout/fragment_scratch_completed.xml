@@ -1,0 +1,27 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <esailors.de.scratchdroid.ScratchView
+        android:id="@+id/scratch_completed_scratch_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:sv_background_drawable="@drawable/scratch_card_bg"
+        app:sv_foreground_drawable="@drawable/repeatable_texture"
+        app:sv_foreground_repeat="true"
+        app:sv_scratch_radius="30dp"
+        />
+
+    <TextView
+        android:id="@+id/scratch_completed_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        />
+
+</LinearLayout>

@@ -3,5 +3,6 @@
     <string-array name="action_list">
         <item>Fill Foreground</item>
         <item>Drawable Foreground</item>
+        <item>ScratchCompleted Listener</item>
     </string-array>
 </resources>
