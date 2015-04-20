@@ -3,3 +3,4 @@ android:
     components:
         - android-22
         - extra
+        - build-tools-22.0.1
