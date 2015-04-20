@@ -108,10 +108,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
     drawNotScratchedAreas(c);
     drawScratchedAreas(c);
-
-    if (debug && customScratchPath != null) {
-      drawCustomScratchPath(c);
-    }
+    drawDebugScratchRegion(c);
   }
 
   private void drawNotScratchedAreas(Canvas c) {
@@ -143,7 +140,11 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     }
   }
 
-  private void drawCustomScratchPath(Canvas c) {
+  private void drawDebugScratchRegion(Canvas c) {
+
+    if (!debug) {
+      return;
+    }
 
     Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
     p.setColor(Color.RED);
