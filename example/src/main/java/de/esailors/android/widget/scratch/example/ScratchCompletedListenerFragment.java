@@ -16,7 +16,6 @@
 package de.esailors.android.widget.scratch.example;
 
 import android.graphics.Path;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import de.esailors.android.widget.scratch.CustomScratchPath;
 import de.esailors.android.widget.scratch.ScratchView;
 
 public class ScratchCompletedListenerFragment extends Fragment implements ScratchView.OnScratchCompletedListener {
@@ -47,43 +47,36 @@ public class ScratchCompletedListenerFragment extends Fragment implements Scratc
     scratchViewWithDefaultScratchRegion.setOnScratchCompletedListener(this);
 
     scratchViewWithCustomScratchRegion.setOnScratchCompletedListener(this)
-            .setScratchPathCalculator(new ScratchView.ScratchPathCalculator() {
-              @Override
-              public Path calculateScratchPath(Rect surfaceFrame) {
-
-                // TODO: set paths and let the view resize them instead of using this ugly calculator
-                // see http://stackoverflow.com/questions/18637817/resize-a-path-in-android-canvas
-
-                // custom scratch region for the apples
-                Path p = new Path();
-
-                float width = 293,
-                        height = 108,
-                        appleWidth = 30,
-                        appleHeight = 35,
-                        horizontalScale = surfaceFrame.width() / width,
-                        verticalScale = surfaceFrame.height() / height;
-
-                // first apple;
-                float left = 134,
-                        top = 53;
-                p.addRect(left * horizontalScale, top * verticalScale,
-                        (left + appleWidth) * horizontalScale,
-                        (top + appleHeight) * verticalScale, Path.Direction.CW);
-
-                // second apple
-                left = 241;
-                top = 57f;
-                p.addRect(left * horizontalScale, top * verticalScale,
-                        (left + appleWidth) * horizontalScale,
-                        (top + appleHeight) * verticalScale, Path.Direction.CW);
-
-                return p;
-              }
-            })
+            .setCustomScratchPath(getCustomScratchPath())
             .setDebug(true); // make custom scratch region visible
 
     return content;
+  }
+
+  private CustomScratchPath getCustomScratchPath() {
+
+    CustomScratchPath p = new CustomScratchPath(293f, 108f);
+
+    float appleWidth = 30,
+            appleHeight = 35;
+
+    // first apple;
+    float left = 134,
+            top = 53;
+
+    p.addRect(left, top,
+            left + appleWidth,
+            top + appleHeight, Path.Direction.CW);
+
+    // second apple
+    left = 241;
+    top = 57f;
+
+    p.addRect(left, top,
+            left + appleWidth,
+            top + appleHeight, Path.Direction.CW);
+
+    return p;
   }
 
   @Override

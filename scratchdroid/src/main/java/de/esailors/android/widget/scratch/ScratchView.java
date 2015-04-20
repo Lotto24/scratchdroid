@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.Shader;
@@ -51,8 +50,8 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   private OnScratchCompletedListener onScratchCompletedListener;
   private DrawLoopThread drawLoopThread;
+  private CustomScratchPath customScratchPath;
   private float scratchRadius;
-  private Path customScratchPath;
   private boolean scratchCompleted;
   private boolean debug;
 
@@ -70,8 +69,6 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     backgroundBitmapPaint.setStyle(Paint.Style.FILL);
     solidPaint.setStyle(Paint.Style.FILL);
   }
-
-  private ScratchPathCalculator scratchPathCalculator;
 
   public ScratchView(Context context) {
 
@@ -152,7 +149,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     p.setColor(Color.RED);
     p.setStyle(Paint.Style.STROKE);
     p.setStrokeWidth(1); // 1px
-    c.drawPath(customScratchPath, p);
+    c.drawPath(scratchRegion.getBoundaryPath(), p);
   }
 
   private Matrix createTransformationMatrix(Canvas c, Bitmap bitmap) {
@@ -269,11 +266,11 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
 
   private void updateScratchRegion() {
 
-    if (scratchPathCalculator != null) {
-      customScratchPath = scratchPathCalculator.calculateScratchPath(getHolder().getSurfaceFrame());
+    if (customScratchPath != null) {
+      Path scaledCustomScratchPath = customScratchPath.scale(getHolder().getSurfaceFrame());
       Region surfaceFrameRegion = new Region();
       surfaceFrameRegion.set(getHolder().getSurfaceFrame());
-      scratchRegion.setPath(customScratchPath, surfaceFrameRegion);
+      scratchRegion.setPath(scaledCustomScratchPath, surfaceFrameRegion);
     } else {
       scratchRegion.set(getHolder().getSurfaceFrame());
     }
@@ -359,7 +356,7 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     return this;
   }
 
-  public ScratchView setCustomScratchPath(Path path) {
+  public ScratchView setCustomScratchPath(CustomScratchPath path) {
 
     customScratchPath = path;
     return this;
@@ -371,21 +368,10 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
     return this;
   }
 
-  public ScratchView setScratchPathCalculator(ScratchPathCalculator scratchPathCalculator) {
-
-    this.scratchPathCalculator = scratchPathCalculator;
-    return this;
-  }
-
   public void scratchAll() {
 
     scratchCompleted = true;
     scratchedPath.addRect(new RectF(getHolder().getSurfaceFrame()), Path.Direction.CW);
-  }
-
-  public interface ScratchPathCalculator {
-
-    Path calculateScratchPath(Rect surfaceFrame);
   }
 
   /**
