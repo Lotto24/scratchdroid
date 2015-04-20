@@ -1,6 +1,8 @@
 # Scratchdroid
 ScratchView for Android.
 
+[![Build Status](https://travis-ci.org/eSailors/scratchdroid.svg)](https://travis-ci.org/eSailors/scratchdroid)
+
 ![ScratchView demo video](https://raw.githubusercontent.com/josketres/scratchdroid/master/art/video-scratch-listener.gif)
 
 Usage
