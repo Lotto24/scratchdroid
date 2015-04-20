@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import de.esailors.android.widget.scratch.CustomScratchPath;
 import de.esailors.android.widget.scratch.ScratchView;
@@ -42,13 +43,22 @@ public class ScratchCompletedListenerFragment extends Fragment implements Scratc
     View content = inflater.inflate(R.layout.fragment_scratch_completed, container, false);
     scratchViewWithDefaultScratchRegion = (ScratchView) content.findViewById(R.id.scratch_completed_scratch_view);
     scratchViewWithCustomScratchRegion = (ScratchView) content.findViewById(R.id.scratch_completed_custom_scratch_region_scratch_view);
-
     label = (TextView) content.findViewById(R.id.scratch_completed_label);
     scratchViewWithDefaultScratchRegion.setOnScratchCompletedListener(this);
-
     scratchViewWithCustomScratchRegion.setOnScratchCompletedListener(this)
-            .setCustomScratchPath(getCustomScratchPath())
-            .setDebug(true); // make custom scratch region visible
+            .setCustomScratchPath(getCustomScratchPath());
+
+    content.findViewById(R.id.scratch_completed_toggle_debug).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+
+        boolean on = ((ToggleButton) v).isChecked();
+
+        // make custom scratch region visible if true
+        scratchViewWithCustomScratchRegion.setDebug(on);
+        scratchViewWithDefaultScratchRegion.setDebug(on);
+      }
+    });
 
     return content;
   }

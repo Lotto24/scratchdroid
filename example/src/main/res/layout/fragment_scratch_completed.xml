@@ -34,4 +34,13 @@
         app:sv_scratch_foreground_repeat="true"
         app:sv_scratch_radius="30dp"
         />
+
+    <ToggleButton
+        android:id="@+id/scratch_completed_toggle_debug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textOff="Debug off"
+        android:textOn="Debug on"/>
+
 </LinearLayout>

@@ -165,13 +165,6 @@ public class ScratchView extends SurfaceView implements SurfaceHolder.Callback {
   public boolean onTouchEvent(MotionEvent event) {
 
     switch (event.getAction()) {
-      case MotionEvent.ACTION_DOWN:
-        if (debug) {
-          // useful to create custom scratch paths
-          Log.d(TAG, String.format("p.addCircle(%f, %f, %f, Path.Direction.CW);", event.getX(), event.getY(), scratchRadius));
-        } else {
-          break;
-        }
       case MotionEvent.ACTION_MOVE:
         updateScratchedPath(event.getX(), event.getY());
         break;
