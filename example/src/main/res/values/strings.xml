@@ -4,5 +4,6 @@
         <item>Fill Foreground</item>
         <item>Drawable Foreground</item>
         <item>ScratchCompleted Listener</item>
+        <item>Scratch Custom</item>
     </string-array>
 </resources>
