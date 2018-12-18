@@ -66,6 +66,9 @@ public class ExampleActivity extends ActionBarActivity implements ActionBar.OnNa
       case 2:
         newFragment = new ScratchCompletedListenerFragment();
         break;
+      case 3:
+        newFragment = new ScratchCustomFragment();
+        break;
     }
 
     getSupportFragmentManager().beginTransaction()
